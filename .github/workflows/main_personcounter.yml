@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'PersonCounter'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3BA1CF93C25841AC814A27DAC0CAC09C }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_066D435943B64A7F8821A3F096E9B8FC }}
