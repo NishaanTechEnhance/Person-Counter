@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Person Counter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function showSpinner() {
+            var spinner = document.getElementById("spinner");
+            spinner.style.display = "inline-block";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Live Person Counter</h1>
+        <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" onsubmit="showSpinner()">
+            <input type="file" name="file" accept="video/*">
+            <button type="submit">Upload Video</button>
+            <div id="spinner" class="spinner"></div>
+        </form>
+        {% if processed_video %}
+            <h2>Processed Video</h2>
+            <video width="640" controls>
+                <source src="{{ url_for('download_file', filename=processed_video) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p><strong>Average Person Count:</strong> {{ average_person_count }}</p>
+            <form action="{{ url_for('download_file', filename=processed_video) }}" method="get">
+                <button type="submit">Download Processed Video</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>
