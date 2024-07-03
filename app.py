@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
 import cv2
 import numpy as np
-import tempfile
 from ultralytics import YOLO
 from tracker import Tracker  
 import pandas as pd
@@ -27,7 +26,7 @@ def process_video(video_path):
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    temp_video_path = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4').name
+    temp_video_path = 'output_video.mp4'
     out = cv2.VideoWriter(temp_video_path, fourcc, fps, (width, height))
 
     id_positions = {}  # Dictionary to store the last known positions of detected IDs
@@ -107,22 +106,22 @@ def upload():
     if file.filename == '':
         return redirect(url_for('index'))
 
-    tfile = tempfile.NamedTemporaryFile(delete=False)
-    tfile.write(file.read())
-    tfile.seek(0)
+    upload_path = file.filename
+    file.save(upload_path)
     
     with app.app_context():
         start_time = time.time()
-        processed_video_path, average_person_count = process_video(tfile.name)
+        processed_video_path, average_person_count = process_video(upload_path)
 
         return render_template('index.html', 
                                processed_video=processed_video_path, 
                                average_person_count=average_person_count,
-                               filename=file.filename)
+                               filename=os.path.basename(processed_video_path))
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_file(filename, as_attachment=True,download_name="output_video.mp4")
+    file_path = filename
+    return send_file(file_path, as_attachment=True, download_name="output_video.mp4")
 
 if __name__ == '__main__':
     app.run(debug=True)
