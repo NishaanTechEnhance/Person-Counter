@@ -22,7 +22,7 @@ def process_video(video_path):
     resize_width = 640
 
     # Prepare for video output with the same codec as input
-    fourcc = int(cap.get(cv2.CAP_PROP_FOURCC))
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -112,7 +112,6 @@ def upload():
     with app.app_context():
         start_time = time.time()
         processed_video_path, average_person_count = process_video(upload_path)
-
         return render_template('index.html', 
                                processed_video=processed_video_path, 
                                average_person_count=average_person_count,
