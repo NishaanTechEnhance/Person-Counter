@@ -1,8 +1,6 @@
 pandas
 Flask
-Jinja2
 numpy
-opencv-python
 opencv-python-headless
 ultralytics
 
